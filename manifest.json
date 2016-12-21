@@ -1,0 +1,43 @@
+{
+  "manifest_version": 2,
+
+  "name": "UCLA BruinWalk Ratings - Easy Access",
+  "description": "Adds Bruin Walk professor ratings in class search results",
+  "version": "0.0.2",
+  "short_name": "EZ BruinWalk Ratings",
+   "update_url": "https://clients2.google.com/service/update2/crx",
+  "background": {
+      "persistent": true,
+      "scripts": [ "background.js" ]
+   },
+  "content_scripts": [
+    {
+      "matches": ["*://sa.ucla.edu/*"],
+      "js": ["jquery.js", "saUclaEduMain.js"],
+      "run_at": "document_end"
+    },
+    {
+      "matches": [ "*://sa.ucla.edu/*"],
+      "css": [ "saUclaEduMain.css" ],
+      "run_at": "document_end"
+    },
+    {
+      "matches": [ "*://be.my.ucla.edu/*"],
+      "css": [ "beUclaEduMain.css" ],
+      "run_at": "document_end"
+    },
+    {
+      "matches": ["*://be.my.ucla.edu/*"],
+      "js": ["jquery.js", "beUclaEduMain.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "permissions": [
+    "http://www.bruinwalk.com/*",
+    "activeTab"
+  ],
+  "icons": { 
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png" }
+}

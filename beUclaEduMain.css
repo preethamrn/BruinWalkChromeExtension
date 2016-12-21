@@ -1,0 +1,57 @@
+.inst-button-bwalk {
+	position: relative;
+	margin-left: 5px;
+	margin-bottom: 4px;
+	float: right;
+
+	background-color: #3496E1;
+	border-width: 1px;
+	border-radius: 1px;
+	border-color: #3496E1;	
+	height: 14px;
+	width: 28px;
+
+	text-indent: 2px;
+    font-size: 12px;
+    color: #FFFFFF;
+    font-weight: 700;
+	cursor:pointer;
+
+}
+
+.instructor-name-paragraph{
+	position: relative;
+    height: 20px;
+}
+
+.inst-rating-popup-cont.show{
+	display: block;
+	top: 11px;
+	left: -90px;
+
+	background-color: #FFFFFF;
+	font-size: 10px;
+}
+
+.inst-rating-popup-cont.hide{
+	/*position: relative;*/
+	display: none;
+}
+
+.inst-rating-popup{
+	position: relative;
+	display: block;
+	float: right;
+
+	font-size: 10px;
+	line-height: 12px;
+	color: #000000;
+	background-color: #FFFFFF;
+
+}
+
+
+.inst-rating-popup td{
+	padding-right:4px;
+	font-size: 11px;
+}
