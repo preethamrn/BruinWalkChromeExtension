@@ -1,7 +1,7 @@
 /*
   Chrome Extension:
   UCLA BruinWalk Professor Ratings - Easy Access
-  Version: 0.0.1
+  Version: 0.0.3
   Created by: Robert Ursua
               robertursuadev@gmail.com
               robertursua@yahoo.com
@@ -9,6 +9,10 @@
 */
 
 // ** FUNCTIONS for be.ucla.edu pages aka class searches in catalog ** //
+
+findSearchedClasses();  
+findClassPlanClasses();
+
 var timeout = null;
 document.addEventListener("DOMSubtreeModified",
 function()
@@ -101,30 +105,31 @@ function addInstButtons(instCont){
     $(pCont).append(instructorName[i].substring(0,15));
 
     // creates and adds the buttons!
-    var bwalkButton = document.createElement("span");
-    //iconSrc = chrome.extension.getURL("webAccessImgs/quesIcon.png");
-    //bwalkButton.type="image";
-    //bwalkButton.src = iconSrc;
+    var bwalkButton = document.createElement("a");
     bwalkButton.className = "inst-button-bwalk";
-    bwalkButton.setAttribute("inst-name",instructorName[i]);
 
-    // adds the average ratings data to the buttons! 
-    getInstSearchRes(bwalkButton);
+    // adds the average ratings data to the buttons! but only to real professors. Not TAs 
+    if(instructorName[i]!="TA"){
 
-    pCont.appendChild(bwalkButton);
+      pCont.appendChild(bwalkButton);
+      getInstSearchRes(bwalkButton,instructorName[i]);
+      //instCont.appendChild(pContForBut)
+    }
+    
     instCont.appendChild(pCont);
   }
 }
 
 
-
 // gets the search results page from bruin walk and
 // sets the overall rating score for the professor.
-function getInstSearchRes(bwalkButton){
+function getInstSearchRes(bwalkButton,instructorName){
 
-  var instructorName = bwalkButton.getAttribute("inst-name");
   var uriInstName = encodeURI(instructorName);
+  bwalkButton.addEventListener("mouseout",instButtEvLisMO(bwalkButton));
 
+  // Communicated to background.js so that background.js can do an xmlHttpRequest
+  // that goes around the cross domain restriction for this content script
   chrome.runtime.sendMessage(
     // JSON that's sent
     {
@@ -133,7 +138,7 @@ function getInstSearchRes(bwalkButton){
       url: 'http://www.bruinwalk.com/search/?category=professors&q=' + uriInstName ,
       data: '',
     }, 
-
+    // callback function after background.js replies
     function(responseHTML) {
       if(responseHTML!="error"){
 
@@ -147,7 +152,7 @@ function getInstSearchRes(bwalkButton){
         else{
           bwalkButton.innerHTML = "N/A";
           bwalkButton.setAttribute("found-tag","NOT_FOUND");
-          bwalkButton.addEventListener("click",instButtEvLis(bwalkButton,false,tempDiv));
+          bwalkButton.addEventListener("mouseover",instButtEvLis(bwalkButton,false,tempDiv));
           return;
         }
 
@@ -166,37 +171,44 @@ function getInstSearchRes(bwalkButton){
           var tempStr = tempDiv.getElementsByClassName("rating")[0].innerHTML;
           bwalkButton.innerHTML = tempStr.substring(tempStr.indexOf('>')+1,tempStr.indexOf('</'));
 
-          bwalkButton.addEventListener("click",instButtEvLis(bwalkButton,true,tempDiv));
+          bwalkButton.addEventListener("mouseover",instButtEvLis(bwalkButton,true,tempDiv));
         }
         // if it doesn't match
         else{
           bwalkButton.innerHTML = "N/A";
           bwalkButton.setAttribute("found-tag","NOT_FOUND");
 
-          bwalkButton.addEventListener("click",instButtEvLis(bwalkButton,false,tempDiv));
+          bwalkButton.addEventListener("mouseover",instButtEvLis(bwalkButton,false,tempDiv));
         }
+      }
+
+      // if xmlHttprequest doesn't work
+      else{
+
       }
     }
   );
 }
 
 
-
-
 // This returns a function for the addeventlisteners for the instructor buttons
-// this function is whats called when the button is clicked
-// This adds the popup thingy when the score button is clicked
+// this function is whats called when the button is mouseovered
+// This adds the popup thingy when the score button is mouseovered
 // so that more details ratings can be seen SeemsGood
 function instButtEvLis(instBut,found,resultDOM) {
   return function(){
-    if(found){
-      // If details about the prof haven't been loaded, load them
-      // and create the popup
-      if(instBut.parentElement.getElementsByClassName("inst-rating-popup-cont").length==0){
+    // If popover hasn't been loaded, load it
+    var popupContainers = instBut.getElementsByClassName("inst-rating-popup-cont");
+    if(popupContainers.length==0){
+      // if professor was found
+      if(found){
         var seeMoreLink = resultDOM.getElementsByClassName("sr-info")[0].getElementsByClassName("see-more")[0];
         var instPageUrl = "http://www.bruinwalk.com" + seeMoreLink.href.substring(seeMoreLink.href.indexOf("/professors")) +"all";
+        instBut.href = instPageUrl;
+        instBut.target = "_blank";
         //console.log(instPageUrl);
 
+        // this uses backgroun.js to retrive the HTML text from the professors Overall ratings page
         chrome.runtime.sendMessage(
           // JSON that's sent
           {
@@ -220,20 +232,7 @@ function instButtEvLis(instBut,found,resultDOM) {
               popup.className = "inst-rating-popup popover-content";
               //popup.textContent = "Showing ";
 
-              var bruinWalkLink = document.createElement("a");
-              bruinWalkLink.href = "http://www.bruinwalk.com";
-              bruinWalkLink.textContent = "BruinWalk";
-              bruinWalkLink.target = "_blank";
-              popup.appendChild(bruinWalkLink);
-
-              popup.append(" search result for: ")
-
-              var teacherNameLink = document.createElement("a");
-              teacherNameLink.href = instPageUrl;
-              teacherNameLink.target = "_blank";  
-              teacherNameLink.textContent = instBut.getAttribute("found-tag");
-
-              popup.appendChild(teacherNameLink);
+              popup.append("Showing Bruin Walk results for: " + instBut.getAttribute("found-tag"));
 
               var ratingRows = tempDiv.getElementsByClassName("rating row");  
               var titles = ['Overall:','Easiness:','Workload:','Clarity:','Helpfulness:']
@@ -261,28 +260,20 @@ function instButtEvLis(instBut,found,resultDOM) {
               table.style.marginTop = "10px";
               popup.appendChild(table);
 
+              var footer = document.createElement("p");
+              footer.append("Click to see full Bruin Walk page");
+              footer.className = "inst-rating-popup-footer";
+              popup.appendChild(footer);
+
               popupCont.appendChild(popup);
               instBut.appendChild(popupCont);
             }
           }
         );
       }
-      // if details have already been loaded, no need to reload.
+
+      //   if professor wasnt found at bruinwalk
       else{
-        if($(instBut.parentElement.getElementsByClassName("inst-rating-popup-cont")[0]).hasClass("show"))
-          {instBut.parentElement.getElementsByClassName("inst-rating-popup-cont")[0].className = "inst-rating-popup-cont hide popover clickover fade bottom in";}
-        else
-          {instBut.parentElement.getElementsByClassName("inst-rating-popup-cont")[0].className = "inst-rating-popup-cont show popover clickover fade bottom in";}
-
-        var popups = instBut.parentElement.getElementsByClassName("inst-rating-popup-cont");
-        for(var i=1;i<popups.length;i++){
-          $(popups[i]).remove();
-        }
-      }
-    }
-    else{
-
-      if(instBut.parentElement.getElementsByClassName("inst-rating-popup-cont").length==0){
         // creates pop-up container
         var popupCont = document.createElement("div");
         popupCont.className = "inst-rating-popup-cont show popover clickover fade bottom in";
@@ -299,20 +290,24 @@ function instButtEvLis(instBut,found,resultDOM) {
 
         popupCont.appendChild(popup);
         instBut.appendChild(popupCont);
-        //$(popupCont).insertAfter($(instBut));
       }
-      else{
-        if($(instBut.parentElement.getElementsByClassName("inst-rating-popup-cont")[0]).hasClass("show"))
-          {instBut.parentElement.getElementsByClassName("inst-rating-popup-cont")[0].className = "inst-rating-popup-cont hide popover clickover fade bottom in";}
-        else
-          {instBut.parentElement.getElementsByClassName("inst-rating-popup-cont")[0].className = "inst-rating-popup-cont show popover clickover fade bottom in";}
+    }
+    // if details have already been loaded, no need to reload.
+    // this also makes the popup appear when the button is mouseovered
+    else{
+      popupContainers[0].className = "inst-rating-popup-cont show popover clickover fade bottom in";
 
-        var popups = instBut.parentElement.getElementsByClassName("inst-rating-popup-cont");
-        for(var i=1;i<popups.length;i++){
-          $(popups[i]).remove();
-        }
+      var popups = instBut.getElementsByClassName("inst-rating-popup-cont");
+      for(var i=1;i<popups.length;i++){
+        $(popups[i]).remove();
       }
-
     }
   };
+}
+
+
+function instButtEvLisMO(instBut) {
+  return function(){
+    instBut.getElementsByClassName("inst-rating-popup-cont")[0].className="inst-rating-popup-cont hide popover clickover fade bottom in";
+  }
 }

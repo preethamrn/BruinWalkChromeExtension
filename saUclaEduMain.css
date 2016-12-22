@@ -10,13 +10,18 @@
 	border-color: #3496E1;	
 	height: 14px;
 	width: 26px;
-	text-indent: -4px;
 
-	line-height: 3px;
+	text-indent: 1px;
     font-size: 12px;
     color: #FFFFFF;
     font-weight: 700;
 
+}
+.inst-button-bwalk:visited {
+    color: #FFFFFF;
+}
+.inst-button-bwalk:hover {
+    color: #A829F2;
 }
 
 .instructorColumn p{
@@ -47,5 +52,10 @@
 
 .inst-rating-popup td{
 	padding-right:4px;
-	font-size: 11px;
+	font-size: 12px;
+}
+
+.inst-rating-popup-footer{
+	padding-top: 10px;
+	font-size: 7px;
 }
