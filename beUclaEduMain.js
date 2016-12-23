@@ -57,7 +57,12 @@ function findClassPlanClasses(){
     var instCont = uclaClasses[i].getElementsByClassName('hide-small');
     
     var classinfo = uclaClasses[i].getElementsByClassName('SubjectAreaName_ClassName')[0].getElementsByTagName('p');
-    var subject = classDict[classinfo[0].innerHTML.substring(classinfo[0].innerHTML.indexOf(":")+2, classinfo[0].innerHTML.length)];
+    var subject;
+    if(classinfo[0].innerHTML.indexOf(":") == -1) {
+      subject = classDict[classinfo[0].innerHTML];
+    } else {
+      subject = classDict[classinfo[0].innerHTML.substring(classinfo[0].innerHTML.indexOf(":")+2, classinfo[0].innerHTML.length)];
+    }
     var classNumber = classinfo[1].innerHTML.substring(0, classinfo[1].innerHTML.indexOf(' '));
     var className = subject + '-' + classNumber;
 
