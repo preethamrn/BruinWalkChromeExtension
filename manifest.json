@@ -3,7 +3,7 @@
 
   "name": "UCLA BruinWalk Ratings - Easy Access",
   "description": "Adds Bruin Walk professor ratings in class search results",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "short_name": "EZ BruinWalk Ratings",
    "update_url": "https://clients2.google.com/service/update2/crx",
   "background": {
