@@ -29,6 +29,16 @@
     height: 20px;
 }
 
+.bad {
+	background-color: #FF0000;
+	border-color: #FF0000;	
+}
+
+.good {
+	background-color: #00FF00;
+	border-color: #00FF00;	
+}
+
 .inst-rating-popup-cont.show{
 	display: block;
 	top: 11px;

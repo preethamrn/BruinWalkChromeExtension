@@ -24,6 +24,16 @@
     color: #A829F2;
 }
 
+.bad {
+	background-color: #FF0000;
+	border-color: #FF0000;	
+}
+
+.good {
+	background-color: #00FF00;
+	border-color: #00FF00;	
+}
+
 .instructorColumn p{
 	position: relative;
     min-height: 20px;
