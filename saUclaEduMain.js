@@ -157,7 +157,10 @@ function getInstSearchRes(bwalkButton,instructorName){
 
           // Gets overall rating and attaches it to the button
           var tempStr = tempDiv.getElementsByClassName("rating")[0].innerHTML;
-          bwalkButton.innerHTML = tempStr.substring(tempStr.indexOf('>')+1,tempStr.indexOf('</'));
+          var score = tempStr.substring(tempStr.indexOf('>')+1,tempStr.indexOf('</'));
+          bwalkButton.innerHTML = score;
+          if(score < 2) bwalkButton.className = "inst-button-bwalk bad";
+          else if(score > 3.5) bwalkButton.className = "inst-button-bwalk good";
 
           bwalkButton.addEventListener("mouseover",instButtEvLis(bwalkButton,true,tempDiv));
         }
