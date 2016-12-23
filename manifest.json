@@ -1,9 +1,9 @@
 {
-  "manifest_version": 2,
 
+  "manifest_version": 2,
   "name": "UCLA BruinWalk Ratings - Easy Access",
-  "description": "Adds Bruin Walk professor ratings in class search results",
   "version": "0.0.4",
+  "description": "Adds Bruin Walk professor ratings in class search results",
   "short_name": "EZ BruinWalk Ratings",
    "update_url": "https://clients2.google.com/service/update2/crx",
   "background": {
