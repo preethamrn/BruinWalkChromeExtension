@@ -1,7 +1,7 @@
 /*
   Chrome Extension:
   UCLA BruinWalk Professor Ratings - Easy Access
-  Version: 0.0.3
+  Version: 0.0.4
   Created by: Robert Ursua
               robertursuadev@gmail.com
               robertursua@yahoo.com
@@ -90,6 +90,7 @@ function addInstButtons(instCont){
   for(var i=0;i<numInst;i++){
     var pCont = document.createElement("p")
     $(pCont).append(instructorName[i].substring(0,15));
+    pCont.title = instructorName[i];
 
     // creates and adds the buttons!
     var bwalkButton = document.createElement("a");
@@ -295,6 +296,12 @@ function instButtEvLis(instBut,found,resultDOM) {
 
 
 function instButtEvLisMO(instBut) {
+  return function(){
+    instBut.parentElement.getElementsByClassName("inst-rating-popup-cont")[0].className="inst-rating-popup-cont hide popover clickover fade bottom in";
+  }
+}
+
+function instPnameEvLisMO(profCont) {
   return function(){
     instBut.parentElement.getElementsByClassName("inst-rating-popup-cont")[0].className="inst-rating-popup-cont hide popover clickover fade bottom in";
   }

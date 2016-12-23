@@ -1,7 +1,7 @@
 /*
   Chrome Extension:
   UCLA BruinWalk Professor Ratings - Easy Access
-  Version: 0.0.3
+  Version: 0.0.4
   Created by: Robert Ursua
               robertursuadev@gmail.com
               robertursua@yahoo.com
@@ -103,6 +103,7 @@ function addInstButtons(instCont){
     var pCont = document.createElement("p")
     pCont.className = "instructor-name-paragraph";
     $(pCont).append(instructorName[i].substring(0,15));
+    pCont.title = instructorName[i];
 
     // creates and adds the buttons!
     var bwalkButton = document.createElement("a");
