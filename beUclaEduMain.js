@@ -48,7 +48,6 @@ function findSearchedClasses(){
     var subject = re.exec(showCourse)[1].replace(/\s/g, '-');
     var classNumber = re.exec(showCourse)[1].replace(/[\s0]/g, '');
     var className = subject + '-' + classNumber;
-    console.log(className);
     
     for(var j=1;j<instCont.length;j++){
         addInstButtons(instCont[j], className);  
@@ -283,8 +282,49 @@ function instButtEvLis(instBut,found,instNameFromRes,className) {
               }
 
               if(ratingRows.length==0) {
-                instBut.href = "http://www.bruinwalk.com/professors/" + instNameFromRes.replace(/\s/g, '-').toLowerCase() +"/all/";
-                table.append("This instructor has no recorded ratings for this class (click to see ratings for other classes)");
+                instPageUrl = "http://www.bruinwalk.com/professors/" + instNameFromRes.replace(/\s/g, '-').toLowerCase() +"/all/";
+
+                // this uses backgroun.js to retrive the HTML text from the professors Overall ratings page
+                chrome.runtime.sendMessage(
+                  // JSON that's sent
+                  {
+                    method: 'GET',
+                    action: 'xhttp',
+                    url: instPageUrl,
+                    data: '',
+                  }, 
+                  function(responseHTML) {
+                    if(responseHTML!="error"){
+                      //console.log(responseHTML);
+                      // loads html into temporary div
+                      var allratingstempDiv = document.createElement('div');
+                      allratingstempDiv.innerHTML = responseHTML.replace(/<script(.|\s)*?\/script>/g, '');
+
+                      var ratingRows = allratingstempDiv.getElementsByClassName("rating row");  
+                      var titles = ['Overall:','Easiness:','Workload:','Clarity:','Helpfulness:']
+
+                      for(var i=0;i<ratingRows.length;i++){
+                        var value = ratingRows[i].getElementsByClassName("value")[0].textContent;
+
+                        var row = document.createElement("tr");
+                        var td1 = document.createElement("td");
+                        var td2 = document.createElement("td");
+                        td1.append(titles[i]);
+                        td2.append(value);
+                        row.appendChild(td1);
+                        row.appendChild(td2);
+                        table.appendChild(row);
+
+                        //console.log(i);
+                        //console.log(value);
+                      }
+
+                      if(ratingRows.length==0) {
+                        table.append("This instructor has no recorded ratings");
+                      }
+                    }
+                  }
+                );
               }
               
               table.style.marginTop = "10px";
@@ -349,7 +389,7 @@ function instButtEvLis(instBut,found,instNameFromRes,className) {
 
         var popup = document.createElement("div");
         popup.className = "inst-rating-popup popover-content inst-nonexistent";
-        popup.textContent = instNameFromRes + " cannot be found for this class on ";
+        popup.textContent = "This professor cannot be found on ";
         popup.style.width = "10em";
 
         var bruinWalkLink = document.createElement("a");
