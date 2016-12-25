@@ -23,26 +23,29 @@
 .inst-button-bwalk:hover {
     color: #A829F2;
 }
+.inst-button-bwalk:link {
+    color: #FFFFFF;
+}
 
 .instructor-name-paragraph{
 	position: relative;
     height: 20px;
 }
 
-.bad {
-	background-color: #FF0000;
-	border-color: #FF0000;	
+.inst-rating-bad {
+	background-color: #B20011;
+	border-color: #B20011;	
 }
 
-.good {
-	background-color: #00FF00;
-	border-color: #00FF00;	
+.inst-rating-good {
+	background-color: #03BC35;
+	border-color: #03BC35;	
 }
 
 .inst-rating-popup-cont.show{
 	display: block;
 	top: 11px;
-	left: -90px;
+	left: 0px;
 
 	background-color: #FFFFFF;
 	font-size: 10px;
@@ -52,20 +55,73 @@
 	display: none;
 }
 
+
 .inst-rating-popup{
 	position: relative;
 	display: block;
 	float: right;
-	max-width: 130px;
 
-	color: #000000;
+    width: 130px;
+    text-align: center;
+}
+
+/* Popup Title */
+.inst-rating-title-div{
+	font-size: 12px;
+	line-height: 12px;
+	padding: 5px;
+	background-color: #3496E1;
+	color: #FFFFFF;
+}
+.inst-rating-title-div-nf{
+	font-size: 12px;
+	line-height: 12px;
+	padding: 5px;
 	background-color: #FFFFFF;
+	color: #000000;
 }
 
-.inst-rating-popup td{
-	padding-right:4px;
+/* Popup Rating Table */
+.inst-rating-table{
+	width:100%;
+	margin-top:5px;
+}
+.inst-rating-table td{
+	font-size: 12px;
 }
 
-.inst-rating-popup-footer{
-	padding-top:10px;
+/* Popup Grades Table */
+.grades-dist-table{
+	margin-top: 5px;
+	width:100%;
+}
+.grades-dist-table-title-cell{
+	padding: 5px;
+	font-size: 12px;
+	line-height: 12px;
+	color: #FFFFFF;
+}
+.grades-dist-bar-cell{
+	padding-right: 2px;
+	padding-left: 2px;
+}
+.grades-dist-bar{
+	position: relative;
+	background-color: #3496E1;
+	border-width: 1px;
+	border-radius: 1px;
+	border-color: #3496E1;	
+}
+.grades-dist-grade-label-cell{
+	font-size: 10px;
+
+}
+
+/* Popup Footer */
+.inst-rating-footer-div{
+	margin-top: 5px;
+	padding: 5px;
+	font-size: 8px;
+	line-height: 8px;
+	color: #777777;
 }
