@@ -8,6 +8,6 @@ Chrome Store page: https://chrome.google.com/webstore/detail/ucla-bruinwalk-rati
 Current Version in this Branch: 0.0.8 in progress
 
 Work that needs to be done:
-- Improve search result matching (many string similarity libraries out there :D)
-
+- Improve search result matching (use coursename to make it more accurate)
+- Check dictionary for class abbreviations
 
